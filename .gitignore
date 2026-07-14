@@ -16,3 +16,6 @@ output/*.mp3
 
 # Gradio
 .gradio/
+
+# Personal downloads / notes - keep local, do not commit
+lesson_note_downloads/

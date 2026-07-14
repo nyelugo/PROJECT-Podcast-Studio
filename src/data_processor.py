@@ -55,3 +55,38 @@ def load_transcript(text: str | None = None, file_path: str | None = None,
         source_type="text",
         word_count=len(cleaned.split()),
     )
+
+
+def fetch_url_text(url: str) -> str:
+    """Fetch a PUBLIC web page and return its readable text.
+
+    Great for public articles and lesson pages. It CANNOT reach pages behind a
+    login (e.g. Ironhack lessons) — those just return a login page — so if we get
+    back too little text, we tell the user to paste the transcript instead.
+    """
+    import requests
+    from bs4 import BeautifulSoup
+
+    if not url or not url.strip():
+        raise ValueError("No URL provided.")
+    url = url.strip()
+
+    try:
+        resp = requests.get(url, timeout=20,
+                            headers={"User-Agent": "Mozilla/5.0 (PodcastStudio)"})
+        resp.raise_for_status()
+    except Exception as exc:
+        raise ValueError(f"Couldn't fetch that URL: {exc}") from exc
+
+    soup = BeautifulSoup(resp.text, "html.parser")
+    for tag in soup(["script", "style", "nav", "header", "footer", "form", "noscript"]):
+        tag.decompose()
+    node = soup.find("main") or soup.find("article") or soup.body or soup
+    text = _clean(node.get_text("\n", strip=True))
+
+    if len(text.split()) < 40:
+        raise ValueError(
+            "That page didn't return enough readable text. If it needs a login "
+            "(like an Ironhack lesson), paste the transcript in the box below instead."
+        )
+    return text

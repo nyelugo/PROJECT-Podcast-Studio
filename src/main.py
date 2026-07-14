@@ -12,6 +12,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import re
 import sys
 from pathlib import Path
 
@@ -19,12 +20,34 @@ from pathlib import Path
 # or from the project root.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from data_processor import load_transcript          # noqa: E402
+from data_processor import load_transcript, fetch_url_text   # noqa: E402
 from llm_processor import get_client, make_recap, LLMError, MODEL  # noqa: E402
 from tts_generator import generate_audio, VOICES, DEFAULT_VOICE, TTSError  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT_DIR = ROOT / "output"
+INPUT_DIR = ROOT / "input"
+
+# Acronyms we want to keep upper-cased when prettifying file/folder names.
+_ACRONYMS = {"Ai": "AI", "Ml": "ML", "Llm": "LLM", "Llms": "LLMs", "Json": "JSON",
+             "Stt": "STT", "Nn": "NN", "Api": "API", "Ui": "UI"}
+
+
+def _pretty(token: str) -> str:
+    """'week1' -> 'Week 1', 'ai-literacy' -> 'AI Literacy'."""
+    token = re.sub(r"(?<=[A-Za-z])(?=\d)", " ", token).replace("-", " ").replace("_", " ")
+    return " ".join(_ACRONYMS.get(w.capitalize(), w.capitalize()) for w in token.split())
+
+
+def list_saved_lessons() -> list[tuple[str, str]]:
+    """Every .txt under input/, as (nice label, filepath) for the dropdown."""
+    if not INPUT_DIR.exists():
+        return []
+    items = []
+    for p in sorted(INPUT_DIR.rglob("*.txt")):
+        crumbs = [_pretty(x) for x in p.relative_to(INPUT_DIR).parts[:-1]] + [_pretty(p.stem)]
+        items.append((" · ".join(crumbs), str(p)))
+    return items
 
 
 def run_pipeline(transcript: str, title: str, voice: str) -> dict:
@@ -49,11 +72,21 @@ def run_pipeline(transcript: str, title: str, voice: str) -> dict:
 def build_ui():
     import gradio as gr
 
-    def on_generate(transcript, title, voice):
-        if not transcript or not transcript.strip():
-            raise gr.Error("Please paste a class transcript first.")
+    def on_generate(lesson, url, transcript, title, voice):
+        if not lesson and not (url and url.strip()) and not (transcript and transcript.strip()):
+            raise gr.Error("Pick a saved lesson, paste a URL, or paste a transcript.")
         try:
-            result = run_pipeline(transcript, title or "Class Recap", voice)
+            # Priority: a picked saved lesson, then a URL, then pasted text
+            # (pasting is needed for login-only pages like Ironhack lessons).
+            if lesson:
+                source_text = Path(lesson).read_text(encoding="utf-8")
+                if not (title and title.strip()):
+                    title = dict((v, k) for k, v in list_saved_lessons()).get(lesson, "")
+            elif url and url.strip():
+                source_text = fetch_url_text(url)
+            else:
+                source_text = transcript
+            result = run_pipeline(source_text, title or "Class Recap", voice)
         except (LLMError, TTSError, ValueError) as exc:
             # Turn any pipeline error into a friendly toast instead of a crash.
             raise gr.Error(str(exc))
@@ -63,15 +96,22 @@ def build_ui():
     with gr.Blocks(title="Podcast Studio - Lesson Recapper") as demo:
         gr.Markdown(
             "# 🎙️ Podcast Studio — Daily Lesson Recapper\n"
-            "Paste a class transcript and get a spoken recap podcast: the LLM pulls the key "
-            "points, then text-to-speech reads them back to you."
+            "**Pick a saved lesson** and hit Generate — or paste a URL / transcript. The LLM pulls "
+            "the key points, then text-to-speech reads them back to you.\n\n"
+            "*Login-only pages (e.g. Ironhack lessons) can't be fetched by URL — save/paste their text instead.*"
         )
         with gr.Row():
             with gr.Column():
-                transcript = gr.Textbox(label="Class transcript", lines=14,
-                                        placeholder="Paste the transcript of your class here...")
+                lesson = gr.Dropdown(choices=list_saved_lessons(), value=None,
+                                     label="📚 Pick a saved lesson",
+                                     info="Files in the input/ folder — select one and hit Generate.")
+                with gr.Accordion("… or use a URL / paste a transcript", open=False):
+                    url = gr.Textbox(label="Lesson URL (public pages)",
+                                     placeholder="https://… a public article or lesson page")
+                    transcript = gr.Textbox(label="… or paste the transcript", lines=8,
+                                            placeholder="Paste the lesson/class transcript here...")
                 title = gr.Textbox(label="Lesson title (optional)",
-                                   placeholder="e.g. Week 2, Day 2 — Speech Recognition")
+                                   placeholder="Auto-filled from the saved lesson if left blank")
                 voice = gr.Dropdown(VOICES, value=DEFAULT_VOICE, label="Voice")
                 btn = gr.Button("Generate recap podcast", variant="primary")
             with gr.Column():
@@ -79,7 +119,7 @@ def build_ui():
                 out_points = gr.Markdown()
                 out_script = gr.Textbox(label="Recap script", lines=8, interactive=False)
                 out_audio = gr.Audio(label="Your recap podcast", type="filepath")
-        btn.click(on_generate, [transcript, title, voice],
+        btn.click(on_generate, [lesson, url, transcript, title, voice],
                   [out_title, out_points, out_script, out_audio])
     return demo
 
