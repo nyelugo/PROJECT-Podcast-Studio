@@ -72,21 +72,23 @@ def run_pipeline(transcript: str, title: str, voice: str) -> dict:
 def build_ui():
     import gradio as gr
 
-    def on_generate(lesson, url, transcript, title, voice):
+    def on_generate(lesson, url, transcript, voice):
         if not lesson and not (url and url.strip()) and not (transcript and transcript.strip()):
             raise gr.Error("Pick a saved lesson, paste a URL, or paste a transcript.")
         try:
             # Priority: a picked saved lesson, then a URL, then pasted text
             # (pasting is needed for login-only pages like Ironhack lessons).
+            # The title is derived automatically; the model also names the episode.
             if lesson:
                 source_text = Path(lesson).read_text(encoding="utf-8")
-                if not (title and title.strip()):
-                    title = dict((v, k) for k, v in list_saved_lessons()).get(lesson, "")
+                title = dict((v, k) for k, v in list_saved_lessons()).get(lesson, "Lesson Recap")
             elif url and url.strip():
                 source_text = fetch_url_text(url)
+                title = "Lesson Recap"
             else:
                 source_text = transcript
-            result = run_pipeline(source_text, title or "Class Recap", voice)
+                title = "Lesson Recap"
+            result = run_pipeline(source_text, title, voice)
         except (LLMError, TTSError, ValueError) as exc:
             # Turn any pipeline error into a friendly toast instead of a crash.
             raise gr.Error(str(exc))
@@ -110,8 +112,6 @@ def build_ui():
                                      placeholder="https://… a public article or lesson page")
                     transcript = gr.Textbox(label="… or paste the transcript", lines=8,
                                             placeholder="Paste the lesson/class transcript here...")
-                title = gr.Textbox(label="Lesson title (optional)",
-                                   placeholder="Auto-filled from the saved lesson if left blank")
                 voice = gr.Dropdown(VOICES, value=DEFAULT_VOICE, label="Voice")
                 btn = gr.Button("Generate recap podcast", variant="primary")
             with gr.Column():
@@ -119,7 +119,7 @@ def build_ui():
                 out_points = gr.Markdown()
                 out_script = gr.Textbox(label="Recap script", lines=8, interactive=False)
                 out_audio = gr.Audio(label="Your recap podcast", type="filepath")
-        btn.click(on_generate, [lesson, url, transcript, title, voice],
+        btn.click(on_generate, [lesson, url, transcript, voice],
                   [out_title, out_points, out_script, out_audio])
     return demo
 
