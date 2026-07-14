@@ -6,6 +6,9 @@ points and text-to-speech to read them back as a short recap episode — all in 
 
 **Author:** Nnanyelugo Ahukannah
 
+> 🧑‍🎓 **New to GitHub?** Start with **[TEAM_GUIDE.md](TEAM_GUIDE.md)** — a no-terminal, click-by-click
+> setup using GitHub Desktop. The steps below are the same thing for people comfortable with a terminal.
+
 ---
 
 ## 🚀 Getting started (Mac **and** Windows)
