@@ -1,69 +1,119 @@
 # 🎙️ Podcast Studio — Daily Lesson Recapper
 
-**Project 1 — AI Consulting Bootcamp.** An automated podcast generator: paste a class
-transcript, and the app uses an LLM to pull out the key points and text-to-speech to read
-them back as a short recap episode — all through a Gradio web interface.
+**Project 1 — AI Consulting Bootcamp.** An automated podcast generator: give it a lesson (pick a
+saved one, paste a transcript, or point it at a public URL) and it uses an LLM to pull the key
+points and text-to-speech to read them back as a short recap episode — all in a Gradio web app.
 
 **Author:** Nnanyelugo Ahukannah
 
-## What it does (the pipeline)
+---
 
-```
-Class transcript  →  LLM (structured recap)  →  Text-to-speech  →  Gradio UI
-   (pasted text)       gpt-4o-mini                tts-1 (mp3)        web app
-```
+## 🚀 Getting started (Mac **and** Windows)
 
-1. **Data processing** — clean the transcript into a structured `SourceDocument`.
-2. **LLM transform** — turn it into a `RecapScript` (title, key points, spoken script) using
-   OpenAI *structured outputs*, so the reply is always the exact shape we need.
-3. **Text-to-speech** — synthesise the spoken script to an `.mp3`.
-4. **Gradio UI** — paste transcript, pick a voice, get the recap script + audio player.
+> Every teammate uses their **own** OpenAI API key. The app runs locally in your browser.
 
-## Setup
+### 1. Install the prerequisites (one-time)
 
-```bash
-pip install -r requirements.txt   # openai, gradio, python-dotenv, pydantic
-cp .env.example .env              # then paste your OpenAI key into .env
-```
+- **Python 3.10 or newer** — download from [python.org](https://www.python.org/downloads/).
+  **Windows users:** on the first install screen, tick **“Add Python to PATH”**.
+- **Git** — [git-scm.com](https://git-scm.com/downloads).
+- **An OpenAI API key** — sign in at [platform.openai.com](https://platform.openai.com/api-keys),
+  create a key, and add a few dollars of credit (this app costs ~1 cent per recap).
 
-`.env` is git-ignored and must never be committed.
-
-## Running it
+### 2. Clone the repo
 
 ```bash
-python src/main.py            # launch the Gradio web app (http://localhost:7860)
-python src/main.py --demo     # headless: run the bundled sample transcript, save output/recap.mp3
+git clone https://github.com/nyelugo/PROJECT-Podcast-Studio.git
+cd PROJECT-Podcast-Studio
 ```
 
-> **Cost note:** each generation makes one LLM call + one TTS call — roughly a cent for a
-> short transcript. Both use your OpenAI key.
+### 3. Add your API key
+
+Make your own `.env` file from the template, then paste your key into it.
+
+- **macOS / Linux:** `cp .env.example .env`
+- **Windows:** `copy .env.example .env`
+
+Open `.env` in any editor and replace `sk-your-key-here` with your real key. **Never commit `.env`** —
+it's already git-ignored.
+
+### 4. Run it — pick ONE of these
+
+**Option A — double-click launcher (easiest):**
+
+- **macOS:** double-click **`run.command`**. (First time only: if macOS says “unidentified developer”,
+  right-click the file → **Open** → **Open**.)
+- **Windows:** double-click **`run.bat`**.
+
+The launcher creates a virtual environment, installs everything, and opens the app. First run takes a
+minute; after that it's instant.
+
+**Option B — run manually in a terminal:**
+
+<details><summary><b>macOS / Linux</b></summary>
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python src/main.py
+```
+</details>
+
+<details><summary><b>Windows (PowerShell)</b></summary>
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+python src\main.py
+```
+</details>
+
+### 5. Open the app
+
+Go to **http://localhost:7860** in your browser. Pick a saved lesson (or paste a transcript / URL),
+choose a voice, and click **Generate recap podcast**. To stop the app, press `Ctrl+C` in the terminal.
+
+---
+
+## How it works (the pipeline)
+
+```
+Lesson (saved file / transcript / public URL)  →  LLM key points  →  Text-to-speech  →  Gradio UI
+```
+
+- `src/data_processor.py` — cleans the input; can also fetch text from a **public** URL.
+- `src/llm_processor.py` — turns it into a structured recap (title, key points, spoken script) with
+  OpenAI structured outputs.
+- `src/tts_generator.py` — synthesises the script to an `.mp3` (OpenAI TTS).
+- `src/main.py` — the Gradio app that ties it together, plus a `--demo` command-line mode.
+
+Add your own lesson files under `input/<something>/…​.txt` and they'll appear in the **Pick a saved
+lesson** dropdown next time you launch.
 
 ## Project structure
 
 ```
 PROJECT-Podcast-Studio/
-├── src/
-│   ├── data_processor.py   # input handling → SourceDocument (dataclass)
-│   ├── llm_processor.py     # transcript → RecapScript (structured output)
-│   ├── tts_generator.py     # recap script → mp3
-│   └── main.py              # pipeline + Gradio app + --demo CLI
-├── sample_transcript.txt    # example input for --demo
-├── output/                  # generated audio lands here (mp3 git-ignored)
-├── requirements.txt · .env.example · .gitignore
+├── src/                     # data_processor, llm_processor, tts_generator, main
+├── input/week1/day1…day5/   # saved lesson content (shows up in the picker)
+├── output/                  # generated recap audio + scripts
+├── run.command / run.bat    # double-click launchers (macOS / Windows)
+├── requirements.txt · README.md · .env.example · .gitignore
 ```
 
-## Error handling
+## Troubleshooting
 
-Every step raises a typed error (`LLMError`, `TTSError`, `ValueError`) that the UI turns into a
-friendly message instead of a crash: missing API key, empty transcript, or an API failure all
-show a clear toast telling you what to fix.
+| Problem | Fix |
+|---|---|
+| **`python` / `python3` not found** | Reinstall Python; on Windows tick “Add to PATH”, then close and reopen the terminal. |
+| **PowerShell won't activate the venv** | Run `Set-ExecutionPolicy -Scope Process RemoteSigned` in that window, then activate again. |
+| **“No OpenAI API key found”** | Make sure you did step 3 — a `.env` file exists with your real key inside. |
+| **macOS: `run.command` “can't be opened”** | Right-click the file → **Open** → **Open** (needed once, for Gatekeeper). |
+| **Port 7860 already in use** | Close the other app, or run `GRADIO_SERVER_PORT=7861 python src/main.py` (Windows: `set GRADIO_SERVER_PORT=7861` first). |
 
-## Status & roadmap
+## Cost & keys
 
-**MVP (done):** text transcript → recap → audio → Gradio UI, with error handling. Verified
-end-to-end (see `output/recap.mp3` from the sample transcript).
-
-**Planned enhancements:**
-- More source types: `.txt`/PDF upload, article URL.
-- Richer episodes: intro/outro lines, choosable length, multiple voices.
-- Nicer Gradio UX: progress feedback, download button, example gallery.
+Each recap makes one LLM call + one TTS call — roughly a cent. Everyone uses their **own** key in their
+**own** `.env`; keys are never shared or committed.
