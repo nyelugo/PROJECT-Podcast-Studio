@@ -1,6 +1,6 @@
 # Project 1 Presentation — Podcast Studio (Content Recapper)
 
-**Team:** SPEAKER 1 · SPEAKER 2 · SPEAKER 3
+**Team:** Adam · Ugo · Anand
 **Slot:** ~10 minutes total → **~7 min presenting + ~3 min Q&A**
 **Structure (from the brief):** Introduction → Problem → Demo → Takeaways
 
@@ -12,14 +12,14 @@
 
 | # | Who | Part | Time |
 |---|---|---|---|
-| 1 | **SPEAKER 1** | Introduction + Problem | ~2:00 |
-| 2 | **SPEAKER 2** | Live Demo | ~3:30 |
-| 3 | **SPEAKER 3** | Takeaways + Technical choices + What's next | ~1:30 |
+| 1 | **Adam** | Introduction + Problem | ~2:00 |
+| 2 | **Ugo** | Live Demo | ~3:30 |
+| 3 | **Anand** | Takeaways + Technical choices + What's next | ~1:30 |
 | 4 | **All 3** | Q&A | ~3:00 |
 
 **Total: ~7 min presenting (2:00 + 3:30 + 1:30) + ~3 min Q&A ≈ 10 min.**
 
-Demo is the star — biggest slice. Intro/Problem set it up fast; SPEAKER 3 lands the "why" and the future.
+Demo is the star — biggest slice. Intro/Problem set it up fast; Anand lands the "why" and the future.
 
 ---
 
@@ -47,10 +47,10 @@ One clean pipeline, four swappable modules. *(The deck will render this as four 
 
 ---
 
-## 1. SPEAKER 1 — Introduction + Problem (~2 min)
+## 1. Adam — Introduction + Problem (~2 min)
 
 **Introduction (~45s)**
-- "Hi, we're **SPEAKER 1, SPEAKER 2, and SPEAKER 3**. We built **Podcast Studio — a Content Recapper**."
+- "Hi, we're **Adam, Ugo, and Anand**. We built **Podcast Studio — a Content Recapper**."
 - One line on what it is: "You give it a lesson — pick a saved one, a public URL, or upload a file — and it turns it into a short **spoken recap podcast**."
 
 **Problem (~1:15)**
@@ -58,11 +58,11 @@ One clean pipeline, four swappable modules. *(The deck will render this as four 
 - "Reading notes back is slow. **Listening isn't** — you can do it on the commute, at the gym, cooking."
 - "So our audience is **learners who want a ~1-minute audio recap** to review on the go. It's also an **accessibility** win for anyone who learns better by ear."
 - "Think **NotebookLM, but focused on your own lessons.**"
-- Hand off: *"SPEAKER 2 will show it live."*
+- Hand off: *"Ugo will show it live."*
 
 ---
 
-## 2. SPEAKER 2 — Live Demo (~3:30)  ⭐ the main event
+## 2. Ugo — Live Demo (~3:30)  ⭐ the main event
 
 **Before you start:** app already open at `http://localhost:7860`, Wi-Fi checked, a backup `.mp3` ready.
 
@@ -75,7 +75,7 @@ One clean pipeline, four swappable modules. *(The deck will render this as four 
 4. Show the three outputs: **Episode title → Key points → Recap script**.
 5. **Play the audio.** Let a few seconds of it actually play — that's the wow moment.
 6. Quick flexibility mention (~10s, keep it verbal — stay on the reliable saved-lesson path, no live fetch): "It also takes a **public URL** or an **uploaded file** (.txt, .md, .pdf), so it works for lessons, articles, or your own notes too."
-7. Hand off: *"SPEAKER 3 will cover what we learned and where we'd take it."*
+7. Hand off: *"Anand will cover what we learned and where we'd take it."*
 
 **If the live run stalls (Wi-Fi/API):** immediately **play a pre-generated `.mp3` from `output/`** and keep narrating. Never stare at a spinner.
 
@@ -83,7 +83,7 @@ One clean pipeline, four swappable modules. *(The deck will render this as four 
 
 ---
 
-## 3. SPEAKER 3 — Takeaways + Technical choices + What's next (~1:30)
+## 3. Anand — Takeaways + Technical choices + What's next (~1:30)
 
 **What we learned**
 - "**Prompt design matters** — asking for a *spoken* script (natural sentences, no bullets) beats a bullet summary."
@@ -109,12 +109,12 @@ One clean pipeline, four swappable modules. *(The deck will render this as four 
 
 | Question type | Who answers | Crisp answer |
 |---|---|---|
-| "Who would actually use this?" | **SPEAKER 1** | Students reviewing on the go; accessibility; onboarding/training recaps. |
-| "Could your team run it?" | **SPEAKER 1** | Yes — README + TEAM_GUIDE + double-click launchers, Mac & Windows. |
-| Demo / product ("can it do X?") | **SPEAKER 2** | Show or describe; scope is one lesson → one recap, extensible. |
-| Cost | **SPEAKER 2** | ~**1 cent** per recap (one LLM call + one TTS call). |
-| "How do you stop it making things up?" | **SPEAKER 3** | Structured output + the prompt **grounds it in the provided text**. |
-| "Why OpenAI for both?" | **SPEAKER 3** | One key/bill, strong integration, TTS returns mp3 (no extra tools). |
+| "Who would actually use this?" | **Adam** | Students reviewing on the go; accessibility; onboarding/training recaps. |
+| "Could your team run it?" | **Adam** | Yes — README + TEAM_GUIDE + double-click launchers, Mac & Windows. |
+| Demo / product ("can it do X?") | **Ugo** | Show or describe; scope is one lesson → one recap, extensible. |
+| Cost | **Ugo** | ~**1 cent** per recap (one LLM call + one TTS call). |
+| "How do you stop it making things up?" | **Anand** | Structured output + the prompt **grounds it in the provided text**. |
+| "Why OpenAI for both?" | **Anand** | One key/bill, strong integration, TTS returns mp3 (no extra tools). |
 
 ---
 
