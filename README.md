@@ -1,7 +1,7 @@
 # 🎙️ Podcast Studio — Daily Lesson Recapper
 
 **Project 1 — AI Consulting Bootcamp.** An automated podcast generator: give it a lesson (pick a
-saved one, paste a transcript, or point it at a public URL) and it uses an LLM to pull the key
+saved one, point it at a public URL, or upload a file) and it uses an LLM to pull the key
 points and text-to-speech to read them back as a short recap episode — all in a Gradio web app.
 
 **Author:** Nnanyelugo Ahukannah
@@ -75,7 +75,7 @@ python src\main.py
 
 ### 5. Open the app
 
-Go to **http://localhost:7860** in your browser. Pick a saved lesson (or paste a transcript / URL),
+Go to **http://localhost:7860** in your browser. Pick a saved lesson (or use a public URL / upload a file),
 choose a voice, and click **Generate recap podcast**. To stop the app, press `Ctrl+C` in the terminal.
 
 ---
@@ -83,7 +83,7 @@ choose a voice, and click **Generate recap podcast**. To stop the app, press `Ct
 ## How it works (the pipeline)
 
 ```
-Lesson (saved file / transcript / public URL)  →  LLM key points  →  Text-to-speech  →  Gradio UI
+Lesson (saved file / public URL / uploaded file)  →  LLM key points  →  Text-to-speech  →  Gradio UI
 ```
 
 - `src/data_processor.py` — cleans the input; can also fetch text from a **public** URL.

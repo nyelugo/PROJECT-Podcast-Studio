@@ -87,6 +87,32 @@ def fetch_url_text(url: str) -> str:
     if len(text.split()) < 40:
         raise ValueError(
             "That page didn't return enough readable text. If it needs a login "
-            "(like an Ironhack lesson), paste the transcript in the box below instead."
+            "(like an Ironhack lesson), upload it as a file or pick a saved lesson instead."
         )
+    return text
+
+
+def read_local_file(path: str) -> str:
+    """Read a compatible local file (.txt, .md, or .pdf) and return its text."""
+    p = Path(path)
+    ext = p.suffix.lower()
+
+    if ext in (".txt", ".md", ".markdown", ".text"):
+        text = p.read_text(encoding="utf-8", errors="ignore")
+    elif ext == ".pdf":
+        try:
+            from pypdf import PdfReader
+        except ModuleNotFoundError as exc:
+            raise ValueError("PDF support needs the 'pypdf' package (pip install pypdf).") from exc
+        try:
+            reader = PdfReader(str(p))
+            text = "\n".join((page.extract_text() or "") for page in reader.pages)
+        except Exception as exc:
+            raise ValueError(f"Couldn't read that PDF: {exc}") from exc
+    else:
+        raise ValueError(f"Unsupported file type '{ext or 'unknown'}'. Please use a .txt, .md, or .pdf file.")
+
+    text = _clean(text)
+    if len(text.split()) < 5:
+        raise ValueError("That file didn't contain readable text. Try a different file.")
     return text

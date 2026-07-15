@@ -20,7 +20,7 @@ from pathlib import Path
 # or from the project root.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from data_processor import load_transcript, fetch_url_text   # noqa: E402
+from data_processor import load_transcript, fetch_url_text, read_local_file   # noqa: E402
 from llm_processor import get_client, make_recap, LLMError, MODEL  # noqa: E402
 from tts_generator import generate_audio, VOICES, DEFAULT_VOICE, TTSError  # noqa: E402
 
@@ -72,13 +72,12 @@ def run_pipeline(transcript: str, title: str, voice: str) -> dict:
 def build_ui():
     import gradio as gr
 
-    def on_generate(lesson, url, transcript, voice):
-        if not lesson and not (url and url.strip()) and not (transcript and transcript.strip()):
-            raise gr.Error("Pick a saved lesson, paste a URL, or paste a transcript.")
+    def on_generate(lesson, url, file_path, voice):
+        if not lesson and not (url and url.strip()) and not file_path:
+            raise gr.Error("Pick a saved lesson, use a public URL, or upload a file.")
         try:
-            # Priority: a picked saved lesson, then a URL, then pasted text
-            # (pasting is needed for login-only pages like Ironhack lessons).
-            # The title is derived automatically; the model also names the episode.
+            # Priority: a picked saved lesson, then a public URL, then an uploaded
+            # file. The title is derived automatically; the model also names the episode.
             if lesson:
                 source_text = Path(lesson).read_text(encoding="utf-8")
                 title = dict((v, k) for k, v in list_saved_lessons()).get(lesson, "Lesson Recap")
@@ -86,7 +85,7 @@ def build_ui():
                 source_text = fetch_url_text(url)
                 title = "Lesson Recap"
             else:
-                source_text = transcript
+                source_text = read_local_file(file_path)
                 title = "Lesson Recap"
             result = run_pipeline(source_text, title, voice)
         except (LLMError, TTSError, ValueError) as exc:
@@ -98,21 +97,22 @@ def build_ui():
     with gr.Blocks(title="Podcast Studio - Lesson Recapper") as demo:
         gr.Markdown(
             "# 🎙️ Podcast Studio — Daily Lesson Recapper\n"
-            "**Pick a saved lesson** from the list and hit **Generate** — an LLM pulls the key points, "
-            "then text-to-speech reads them back as a short recap.\n\n"
-            "*Recapping something else? Use the URL / transcript panel below. Login-only pages "
-            "(e.g. Ironhack lessons) can't be fetched by URL — save or paste their text instead.*"
+            "**Pick a saved lesson** and hit **Generate** — an LLM pulls the key points, then "
+            "text-to-speech reads them back as a short recap.\n\n"
+            "*Recapping something else? Use the panel below to fetch a **public URL** or **upload a "
+            "file** (.txt, .md, .pdf). Password-protected pages (e.g. Ironhack lessons) can't be "
+            "fetched — upload them as a file instead.*"
         )
         with gr.Row():
             with gr.Column():
                 lesson = gr.Dropdown(choices=list_saved_lessons(), value=None,
                                      label="📚 Pick a saved lesson",
                                      info="Files in the input/ folder — select one and hit Generate.")
-                with gr.Accordion("… or use a URL / paste a transcript", open=False):
-                    url = gr.Textbox(label="Lesson URL (public pages)",
-                                     placeholder="https://… a public article or lesson page")
-                    transcript = gr.Textbox(label="… or paste the transcript", lines=8,
-                                            placeholder="Paste the lesson/class transcript here...")
+                with gr.Accordion("… or use a public URL / upload a file", open=False):
+                    url = gr.Textbox(label="Public lesson / article URL",
+                                     placeholder="https://… a public (non-login) page")
+                    file_in = gr.File(label="… or upload a file (.txt, .md, .pdf)",
+                                      file_types=[".txt", ".md", ".markdown", ".pdf"], type="filepath")
                 voice = gr.Dropdown(VOICES, value=DEFAULT_VOICE, label="Voice")
                 btn = gr.Button("Generate recap podcast", variant="primary")
             with gr.Column():
@@ -120,7 +120,7 @@ def build_ui():
                 out_points = gr.Markdown()
                 out_script = gr.Textbox(label="Recap script", lines=8, interactive=False)
                 out_audio = gr.Audio(label="Your recap podcast", type="filepath")
-        btn.click(on_generate, [lesson, url, transcript, voice],
+        btn.click(on_generate, [lesson, url, file_in, voice],
                   [out_title, out_points, out_script, out_audio])
     return demo
 
