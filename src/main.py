@@ -1,5 +1,5 @@
 """
-Podcast Studio — Daily Lesson Recapper.
+Podcast Studio — Content Recapper.
 Author: Nnanyelugo Ahukannah
 
 End-to-end pipeline:  transcript  ->  LLM recap  ->  text-to-speech  ->  Gradio UI.
@@ -101,9 +101,9 @@ def build_ui():
         points_md = "### Key points\n" + "\n".join(f"- {p}" for p in result["key_points"])
         return result["title"], points_md, result["script"], result["audio_path"]
 
-    with gr.Blocks(title="Podcast Studio - Lesson Recapper") as demo:
+    with gr.Blocks(title="Podcast Studio - Content Recapper") as demo:
         gr.Markdown(
-            "# 🎙️ Podcast Studio — Daily Lesson Recapper\n"
+            "# 🎙️ Podcast Studio — Content Recapper\n"
             "**Turn any lesson, article, or report into a short spoken recap.** Pick **one** source "
             "below, then hit **Generate** — an LLM pulls the key points and text-to-speech reads "
             "them back.\n\n"
@@ -153,7 +153,7 @@ def build_ui():
 # --------------------------------------------------------------------------
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Podcast Studio — Daily Lesson Recapper")
+    parser = argparse.ArgumentParser(description="Podcast Studio — Content Recapper")
     parser.add_argument("--demo", action="store_true",
                         help="Headless run on the bundled sample transcript (no web UI).")
     args = parser.parse_args()

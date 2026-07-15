@@ -1,4 +1,4 @@
-# 🎙️ Podcast Studio — Daily Lesson Recapper
+# 🎙️ Podcast Studio — Content Recapper
 
 **Project 1 — AI Consulting Bootcamp.** An automated podcast generator: give it any lesson,
 article, or report (pick a saved one, point it at a public URL, or upload a .txt/.md/.pdf) and it

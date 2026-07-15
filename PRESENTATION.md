@@ -1,4 +1,4 @@
-# Project 1 Presentation — Podcast Studio (Daily Lesson Recapper)
+# Project 1 Presentation — Podcast Studio (Content Recapper)
 
 **Team:** SPEAKER 1 · SPEAKER 2 · SPEAKER 3
 **Slot:** ~10 minutes total → **~7 min presenting + ~3 min Q&A**
@@ -50,7 +50,7 @@ One clean pipeline, four swappable modules. *(The deck will render this as four 
 ## 1. SPEAKER 1 — Introduction + Problem (~2 min)
 
 **Introduction (~45s)**
-- "Hi, we're **SPEAKER 1, SPEAKER 2, and SPEAKER 3**. We built **Podcast Studio — a Daily Lesson Recapper**."
+- "Hi, we're **SPEAKER 1, SPEAKER 2, and SPEAKER 3**. We built **Podcast Studio — a Content Recapper**."
 - One line on what it is: "You give it a lesson — pick a saved one, a public URL, or upload a file — and it turns it into a short **spoken recap podcast**."
 
 **Problem (~1:15)**
