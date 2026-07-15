@@ -38,11 +38,6 @@ One clean pipeline, four swappable modules. *(The deck will render this as four 
 
 ## Technical highlights (pick 2–3 to say live; the rest are Q&A cribs)
 
-**Say live (strongest):**
-- **Structured outputs (Pydantic schema):** the LLM must return title + key points + script in an exact shape — no hallucinated or broken formatting.
-- **Deliberate model choices:** `gpt-4o-mini` (cheap, fast, strong at summarising) for text + `tts-1` for natural voice → **~1¢ per recap**.
-- **Appropriate data structures:** a `dataclass` for the input document and a Pydantic model for the recap — clean, typed data between modules.
-
 **Q&A cribs (only if asked):**
 - **Prompt design:** system prompt asks for a *spoken* script, grounded in the source text, fixed length.
 - **Modular + error handling:** separate data / LLM / TTS / UI steps; typed errors become friendly UI messages, not crashes.
@@ -93,6 +88,11 @@ One clean pipeline, four swappable modules. *(The deck will render this as four 
 **What we learned**
 - "**Prompt design matters** — asking for a *spoken* script (natural sentences, no bullets) beats a bullet summary."
 - "**Flexible inputs** — pick a saved lesson, fetch a public URL, or upload a file, so it works for lessons, articles, or your own notes."
+
+**Say live (strongest):**
+- **Structured outputs (Pydantic schema):** the LLM must return title + key points + script in an exact shape — no hallucinated or broken formatting.
+- **Deliberate model choices:** `gpt-4o-mini` (cheap, fast, strong at summarising) for text + `tts-1` for natural voice → **~1¢ per recap**.
+- **Appropriate data structures:** a `dataclass` for the input document and a Pydantic model for the recap — clean, typed data between modules.
 
 **Technical choices (say these — they're graded; the "How it works" diagram slide backs this up)**
 - **Structured outputs (Pydantic):** the LLM returns title + key points + script in a fixed shape — reliable, no broken formatting.
