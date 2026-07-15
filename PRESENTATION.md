@@ -17,6 +17,8 @@
 | 3 | **SPEAKER 3** | Takeaways + Technical choices + What's next | ~1:30 |
 | 4 | **All 3** | Q&A | ~3:00 |
 
+**Total: ~7 min presenting (2:00 + 3:30 + 1:30) + ~3 min Q&A ≈ 10 min.**
+
 Demo is the star — biggest slice. Intro/Problem set it up fast; SPEAKER 3 lands the "why" and the future.
 
 ---
@@ -107,12 +109,12 @@ One clean pipeline, four swappable modules. *(The deck will render this as four 
 
 | Question type | Who answers | Crisp answer |
 |---|---|---|
+| "Who would actually use this?" | **SPEAKER 1** | Students reviewing on the go; accessibility; onboarding/training recaps. |
+| "Could your team run it?" | **SPEAKER 1** | Yes — README + TEAM_GUIDE + double-click launchers, Mac & Windows. |
 | Demo / product ("can it do X?") | **SPEAKER 2** | Show or describe; scope is one lesson → one recap, extensible. |
 | Cost | **SPEAKER 2** | ~**1 cent** per recap (one LLM call + one TTS call). |
 | "How do you stop it making things up?" | **SPEAKER 3** | Structured output + the prompt **grounds it in the provided text**. |
 | "Why OpenAI for both?" | **SPEAKER 3** | One key/bill, strong integration, TTS returns mp3 (no extra tools). |
-| "Who would actually use this?" | **SPEAKER 1** | Students reviewing on the go; accessibility; onboarding/training recaps. |
-| "Could your team run it?" | **SPEAKER 1** | Yes — README + TEAM_GUIDE + double-click launchers, Mac & Windows. |
 
 ---
 
