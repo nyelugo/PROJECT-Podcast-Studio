@@ -28,6 +28,9 @@ ROOT = Path(__file__).resolve().parents[1]
 OUTPUT_DIR = ROOT / "output"
 INPUT_DIR = ROOT / "input"
 
+# The three input sources (radio) — exactly one is used per generation.
+SRC_LESSON, SRC_URL, SRC_FILE = "Saved lesson", "Public URL", "Upload a file"
+
 # Acronyms we want to keep upper-cased when prettifying file/folder names.
 _ACRONYMS = {"Ai": "AI", "Ml": "ML", "Llm": "LLM", "Llms": "LLMs", "Json": "JSON",
              "Stt": "STT", "Nn": "NN", "Api": "API", "Ui": "UI"}
@@ -72,19 +75,23 @@ def run_pipeline(transcript: str, title: str, voice: str) -> dict:
 def build_ui():
     import gradio as gr
 
-    def on_generate(lesson, url, file_path, voice):
-        if not lesson and not (url and url.strip()) and not file_path:
-            raise gr.Error("Pick a saved lesson, use a public URL, or upload a file.")
+    def on_generate(source_type, lesson, url, file_path, voice):
         try:
-            # Priority: a picked saved lesson, then a public URL, then an uploaded
-            # file. The title is derived automatically; the model also names the episode.
-            if lesson:
+            # Exactly one source, chosen by the radio. The title is derived
+            # automatically; the model also names the episode.
+            if source_type == SRC_LESSON:
+                if not lesson:
+                    raise gr.Error("Please pick a saved lesson from the dropdown.")
                 source_text = Path(lesson).read_text(encoding="utf-8")
                 title = dict((v, k) for k, v in list_saved_lessons()).get(lesson, "Lesson Recap")
-            elif url and url.strip():
+            elif source_type == SRC_URL:
+                if not (url and url.strip()):
+                    raise gr.Error("Please paste a public (non-login) URL.")
                 source_text = fetch_url_text(url)
                 title = "Lesson Recap"
-            else:
+            else:  # SRC_FILE
+                if not file_path:
+                    raise gr.Error("Please upload a .txt, .md, or .pdf file.")
                 source_text = read_local_file(file_path)
                 title = "Lesson Recap"
             result = run_pipeline(source_text, title, voice)
@@ -97,22 +104,24 @@ def build_ui():
     with gr.Blocks(title="Podcast Studio - Lesson Recapper") as demo:
         gr.Markdown(
             "# 🎙️ Podcast Studio — Daily Lesson Recapper\n"
-            "**Pick a saved lesson** and hit **Generate** — an LLM pulls the key points, then "
+            "Pick **one** source below, then hit **Generate** — an LLM pulls the key points and "
             "text-to-speech reads them back as a short recap.\n\n"
-            "*Recapping something else? Use the panel below to fetch a **public URL** or **upload a "
-            "file** (.txt, .md, .pdf). Password-protected pages (e.g. Ironhack lessons) can't be "
-            "fetched — upload them as a file instead.*"
+            "*Public URLs only — password-protected pages (e.g. Ironhack lessons) can't be fetched; "
+            "upload those as a file instead.*"
         )
         with gr.Row():
             with gr.Column():
+                # One radio picks the source; only the matching input is shown.
+                source_type = gr.Radio([SRC_LESSON, SRC_URL, SRC_FILE], value=SRC_LESSON,
+                                       label="Where's the lesson from?")
                 lesson = gr.Dropdown(choices=list_saved_lessons(), value=None,
                                      label="📚 Pick a saved lesson",
-                                     info="Files in the input/ folder — select one and hit Generate.")
-                with gr.Accordion("… or use a public URL / upload a file", open=False):
-                    url = gr.Textbox(label="Public lesson / article URL",
-                                     placeholder="https://… a public (non-login) page")
-                    file_in = gr.File(label="… or upload a file (.txt, .md, .pdf)",
-                                      file_types=[".txt", ".md", ".markdown", ".pdf"], type="filepath")
+                                     info="Files in the input/ folder.", visible=True)
+                url = gr.Textbox(label="🔗 Public lesson / article URL",
+                                 placeholder="https://… a public (non-login) page", visible=False)
+                file_in = gr.File(label="📄 Upload a file (.txt, .md, .pdf)",
+                                  file_types=[".txt", ".md", ".markdown", ".pdf"],
+                                  type="filepath", visible=False)
                 voice = gr.Dropdown(VOICES, value=DEFAULT_VOICE, label="Voice")
                 btn = gr.Button("Generate recap podcast", variant="primary")
             with gr.Column():
@@ -120,7 +129,16 @@ def build_ui():
                 out_points = gr.Markdown()
                 out_script = gr.Textbox(label="Recap script", lines=8, interactive=False)
                 out_audio = gr.Audio(label="Your recap podcast", type="filepath")
-        btn.click(on_generate, [lesson, url, file_in, voice],
+
+        def _show_source(choice):
+            """Show only the input that matches the selected source."""
+            return (gr.update(visible=choice == SRC_LESSON),
+                    gr.update(visible=choice == SRC_URL),
+                    gr.update(visible=choice == SRC_FILE))
+
+        source_type.change(_show_source, source_type, [lesson, url, file_in])
+
+        btn.click(on_generate, [source_type, lesson, url, file_in, voice],
                   [out_title, out_points, out_script, out_audio])
     return demo
 
