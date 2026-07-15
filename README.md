@@ -1,8 +1,9 @@
 # 🎙️ Podcast Studio — Daily Lesson Recapper
 
-**Project 1 — AI Consulting Bootcamp.** An automated podcast generator: give it a lesson (pick a
-saved one, point it at a public URL, or upload a file) and it uses an LLM to pull the key
-points and text-to-speech to read them back as a short recap episode — all in a Gradio web app.
+**Project 1 — AI Consulting Bootcamp.** An automated podcast generator: give it any lesson,
+article, or report (pick a saved one, point it at a public URL, or upload a .txt/.md/.pdf) and it
+uses an LLM to pull the key points and text-to-speech to read them back as a short recap episode —
+all in a Gradio web app. Built around daily lessons, but works for any readable document.
 
 **Author:** Nnanyelugo Ahukannah
 

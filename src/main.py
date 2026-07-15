@@ -104,8 +104,9 @@ def build_ui():
     with gr.Blocks(title="Podcast Studio - Lesson Recapper") as demo:
         gr.Markdown(
             "# 🎙️ Podcast Studio — Daily Lesson Recapper\n"
-            "Pick **one** source below, then hit **Generate** — an LLM pulls the key points and "
-            "text-to-speech reads them back as a short recap.\n\n"
+            "**Turn any lesson, article, or report into a short spoken recap.** Pick **one** source "
+            "below, then hit **Generate** — an LLM pulls the key points and text-to-speech reads "
+            "them back.\n\n"
             "*Public URLs only — password-protected pages (e.g. Ironhack lessons) can't be fetched; "
             "upload those as a file instead.*"
         )
