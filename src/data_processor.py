@@ -2,10 +2,11 @@
 Podcast Studio — data processing step.
 Author: Nnanyelugo Ahukannah
 
-Handles the input source. MVP accepts a class transcript as pasted text or a
-.txt upload, cleans it, and returns a structured `SourceDocument` that the rest
-of the pipeline consumes. (Using a dataclass keeps the data standardized as it
-flows between modules — one of the project's requirements.)
+Handles the input source. Turns a lesson — a saved file, a public URL, or an
+uploaded file (.txt/.md/.pdf) — into cleaned text, and returns a structured
+`SourceDocument` that the rest of the pipeline consumes. (Using a dataclass keeps
+the data standardized as it flows between modules — one of the project's
+requirements.)
 """
 
 from __future__ import annotations
@@ -34,9 +35,10 @@ def _clean(text: str) -> str:
 
 def load_transcript(text: str | None = None, file_path: str | None = None,
                     title: str = "Class Recap") -> SourceDocument:
-    """Build a SourceDocument from pasted text or a .txt file.
+    """Build a SourceDocument from already-loaded text (or a .txt file path).
 
-    Raises a clear error if nothing usable was provided — the UI turns that into
+    The UI-facing loaders (fetch_url_text / read_local_file) hand their text here;
+    raises a clear error if nothing usable was provided — the UI turns that into
     a friendly message rather than a crash.
     """
     if file_path:
@@ -46,7 +48,7 @@ def load_transcript(text: str | None = None, file_path: str | None = None,
         text = p.read_text(encoding="utf-8")
 
     if not text or not text.strip():
-        raise ValueError("No transcript text provided. Paste a transcript or upload a .txt file.")
+        raise ValueError("No lesson text provided. Pick a saved lesson, use a public URL, or upload a file.")
 
     cleaned = _clean(text)
     return SourceDocument(
@@ -62,7 +64,7 @@ def fetch_url_text(url: str) -> str:
 
     Great for public articles and lesson pages. It CANNOT reach pages behind a
     login (e.g. Ironhack lessons) — those just return a login page — so if we get
-    back too little text, we tell the user to paste the transcript instead.
+    back too little text, we tell the user to upload a file or pick a saved lesson.
     """
     import requests
     from bs4 import BeautifulSoup
