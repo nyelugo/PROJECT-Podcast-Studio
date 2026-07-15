@@ -130,7 +130,10 @@ def build_ui():
                 out_title = gr.Textbox(label="Episode title", interactive=False)
                 out_audio = gr.Audio(label="Your recap podcast", type="filepath")
                 out_points = gr.Markdown()
-                out_script = gr.Textbox(label="Recap script", lines=8, interactive=False)
+                # The full script is long, so keep it tucked away and expandable.
+                with gr.Accordion("Recap script", open=False):
+                    out_script = gr.Textbox(label="Recap script", lines=8,
+                                            interactive=False, show_label=False)
 
         def _show_source(choice):
             """Show only the input that matches the selected source."""
