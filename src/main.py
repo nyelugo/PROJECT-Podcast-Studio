@@ -126,10 +126,11 @@ def build_ui():
                 voice = gr.Dropdown(VOICES, value=DEFAULT_VOICE, label="Voice")
                 btn = gr.Button("Generate recap podcast", variant="primary")
             with gr.Column():
+                # Order: title, then the audio (the deliverable), then the supporting text.
                 out_title = gr.Textbox(label="Episode title", interactive=False)
+                out_audio = gr.Audio(label="Your recap podcast", type="filepath")
                 out_points = gr.Markdown()
                 out_script = gr.Textbox(label="Recap script", lines=8, interactive=False)
-                out_audio = gr.Audio(label="Your recap podcast", type="filepath")
 
         def _show_source(choice):
             """Show only the input that matches the selected source."""
