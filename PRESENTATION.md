@@ -87,18 +87,18 @@ One clean pipeline, four swappable modules. *(The deck will render this as four 
 
 - "Thanks Ugo. So while that recap was generating, here's what was actually happening under the hood — and what we'd build next."
 
-**Technical choices (~1:15)**
+**Technical choices**
 - "We don't just ask the LLM for text back — we force it through a **Pydantic schema**, so it always returns a title, key points, and script in the exact same shape. That's what stops broken formatting or half-finished output from ever reaching the user."
 - "We picked **gpt-4o-mini** for the summarizing and **tts-1** for the voice — both cheap and fast, so a full recap costs about **a cent**. That mattered because we wanted this to be something people'd actually use daily, not something they ration."
 - "Under the hood, a **dataclass** carries the raw lesson text, and a **Pydantic model** carries the structured recap — so every module, data, LLM, speech, UI, is passing typed, predictable data to the next one instead of raw strings."
 
-**What we learned (~25s)**
+**What we learned**
 - "Two things stood out. One: **prompt design mattered more than model choice** — telling it to write a *spoken* script, not a bullet summary, made the audio actually sound natural. Two: keeping the pipeline **modular** meant we could swap or fix one piece, say the TTS voice, without touching anything else."
 
-**What's next (~20s)**
+**What's next**
 - "Next up: a **download button**, intro/outro music, adjustable length — and eventually **deploying it online**, so it's not just the three of us using it."
 
-**Close / handoff (~5s)**
+**Close / handoff**
 - "That's the build — happy to take questions."
 
 ---
