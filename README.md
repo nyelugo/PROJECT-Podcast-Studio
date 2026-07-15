@@ -5,7 +5,7 @@ article, or report (pick a saved one, point it at a public URL, or upload a .txt
 uses an LLM to pull the key points and text-to-speech to read them back as a short recap episode —
 all in a Gradio web app. Built around daily lessons, but works for any readable document.
 
-**Author:** Nnanyelugo Ahukannah
+**Author:** Adam, Anand & Ugo
 
 > 🧑‍🎓 **New to GitHub?** Start with **[TEAM_GUIDE.md](TEAM_GUIDE.md)** — a no-terminal, click-by-click
 > setup using GitHub Desktop. The steps below are the same thing for people comfortable with a terminal.

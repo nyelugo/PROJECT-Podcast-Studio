@@ -1,6 +1,6 @@
 """
 Podcast Studio — text-to-speech step.
-Author: Nnanyelugo Ahukannah
+Author: Adam, Anand & Ugo
 
 Turns the recap script into an audio file using OpenAI's TTS API. Streams the
 response straight to disk so we never hold the whole audio in memory.

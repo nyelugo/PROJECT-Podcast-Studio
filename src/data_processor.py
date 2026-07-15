@@ -1,6 +1,6 @@
 """
 Podcast Studio — data processing step.
-Author: Nnanyelugo Ahukannah
+Author: Adam, Anand & Ugo
 
 Handles the input source. Turns a lesson — a saved file, a public URL, or an
 uploaded file (.txt/.md/.pdf) — into cleaned text, and returns a structured

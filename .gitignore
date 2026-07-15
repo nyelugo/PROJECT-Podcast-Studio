@@ -14,6 +14,9 @@ output/*.mp3
 # OS
 .DS_Store
 
+# Office temporary lock files (created when a .pptx/.docx is open)
+~$*
+
 # Gradio
 .gradio/
 

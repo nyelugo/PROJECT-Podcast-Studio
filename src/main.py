@@ -1,6 +1,6 @@
 """
 Podcast Studio — Content Recapper.
-Author: Nnanyelugo Ahukannah
+Author: Adam, Anand & Ugo
 
 End-to-end pipeline:  transcript  ->  LLM recap  ->  text-to-speech  ->  Gradio UI.
 

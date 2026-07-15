@@ -1,6 +1,6 @@
 """
 Podcast Studio — LLM step.
-Author: Nnanyelugo Ahukannah
+Author: Adam, Anand & Ugo
 
 Turns a transcript into a structured, spoken recap. Uses OpenAI *structured
 outputs* (a Pydantic schema as `response_format`) so the reply always comes back
