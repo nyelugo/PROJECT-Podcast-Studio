@@ -29,7 +29,7 @@ Demo is the star — biggest slice. Intro/Problem set it up fast; SPEAKER 3 land
 INPUT  ─▶  LLM  ─▶  TEXT-TO-SPEECH  ─▶  GRADIO APP
 ```
 
-1. **Input** — pick a saved lesson, a public URL, or pasted text  ·  `data_processor`
+1. **Input** — pick a saved lesson, a public URL, or an uploaded file (.txt/.md/.pdf)  ·  `data_processor`
 2. **LLM** — `gpt-4o-mini` returns a **structured** recap: title, key points, spoken script  ·  `llm_processor` (Pydantic)
 3. **Text-to-speech** — `tts-1` turns the script into an **mp3**  ·  `tts_generator`
 4. **Gradio app** — play and read the recap  ·  `main.py`
@@ -56,7 +56,7 @@ One clean pipeline, four swappable modules. *(The deck will render this as four 
 
 **Introduction (~45s)**
 - "Hi, we're **SPEAKER 1, SPEAKER 2, and SPEAKER 3**. We built **Podcast Studio — a Daily Lesson Recapper**."
-- One line on what it is: "You give it a lesson — pick a saved one, a public URL, or pasted text — and it turns it into a short **spoken recap podcast**."
+- One line on what it is: "You give it a lesson — pick a saved one, a public URL, or upload a file — and it turns it into a short **spoken recap podcast**."
 
 **Problem (~1:15)**
 - "As students, we get **hours of dense material every day** and very little time to review it."
@@ -79,7 +79,7 @@ One clean pipeline, four swappable modules. *(The deck will render this as four 
    - "Then **OpenAI text-to-speech** reads that script back as audio."
 4. Show the three outputs: **Episode title → Key points → Recap script**.
 5. **Play the audio.** Let a few seconds of it actually play — that's the wow moment.
-6. Quick flexibility mention (~10s, keep it verbal — stay on the reliable saved-lesson path, no live fetch): "It also takes a **public URL** or **any pasted text**, so it works for lessons, articles, or your own notes too."
+6. Quick flexibility mention (~10s, keep it verbal — stay on the reliable saved-lesson path, no live fetch): "It also takes a **public URL** or an **uploaded file** (.txt, .md, .pdf), so it works for lessons, articles, or your own notes too."
 7. Hand off: *"SPEAKER 3 will cover what we learned and where we'd take it."*
 
 **If the live run stalls (Wi-Fi/API):** immediately **play a pre-generated `.mp3` from `output/`** and keep narrating. Never stare at a spinner.
@@ -92,7 +92,7 @@ One clean pipeline, four swappable modules. *(The deck will render this as four 
 
 **What we learned**
 - "**Prompt design matters** — asking for a *spoken* script (natural sentences, no bullets) beats a bullet summary."
-- "**Flexible inputs** — pick a saved lesson, fetch a public URL, or paste text, so it works for lessons, articles, or your own notes."
+- "**Flexible inputs** — pick a saved lesson, fetch a public URL, or upload a file, so it works for lessons, articles, or your own notes."
 
 **Technical choices (say these — they're graded; the "How it works" diagram slide backs this up)**
 - **Structured outputs (Pydantic):** the LLM returns title + key points + script in a fixed shape — reliable, no broken formatting.
