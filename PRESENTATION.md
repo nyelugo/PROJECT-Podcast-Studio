@@ -49,16 +49,15 @@ One clean pipeline, four swappable modules. *(The deck will render this as four 
 
 ## 1. Adam — Introduction + Problem (~2 min)
 
-**Introduction (~45s)**
+**Introduction (~2:00)**
 - "Hi, we're **Adam, Ugo, and Anand**. We built **Podcast Studio — a Content Recapper**."
-- One line on what it is: "You give it a lesson — pick a saved one, a public URL, or upload a file — and it turns it into a short **spoken recap podcast**."
-
-**Problem (~1:15)**
-- "As students, we get **hours of dense material every day** and very little time to review it."
-- "Reading notes back is slow. **Listening isn't** — you can do it on the commute, at the gym, cooking."
-- "So our audience is **learners who want a ~1-minute audio recap** to review on the go. It's also an **accessibility** win for anyone who learns better by ear."
-- "Think **NotebookLM, but focused on your own lessons.**"
-- Hand off: *"Ugo will show it live."*
+- Each day at IronHack we cover multiple lessons on different, and dense, topics. It is difficult to remember all of the topics and how they relate to each other.
+- It takes a lot of time to catch up with the material and to ensure it sticks.
+- We thought, why not organize, summarize, and listen to the notes instead!
+- We created a workflow that takes each day's lessons, organizes the content, and presents it in one easy to use daily lesson recap.
+- Since you don't have a lot of time given the full on Bootcamp workload, we also ensured that each daily lesson is only 1 minute. You can listen to it on the way to class or in the few mins every morning it takes for everyone to arrive.
+- We hope this makes your experience at IronHack more manageable!
+- Ugo will now show you how it works.
 
 ---
 
