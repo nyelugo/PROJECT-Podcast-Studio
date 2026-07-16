@@ -51,13 +51,14 @@ One clean pipeline, four swappable modules. *(The deck will render this as four 
 
 **Introduction (~2:00)**
 - "Hi, we're **Adam, Ugo, and Anand**. We built **Podcast Studio — a Content Recapper**."
-- Each day at IronHack we cover multiple lessons on different, and dense, topics. It is difficult to remember all of the topics and how they relate to each other.
-- It takes a lot of time to catch up with the material and to ensure it sticks.
+- Each day at IronHack we cover multiple lessons on different, and dense, topics. It is difficult to remember everything!
+- It takes a lot of time to catch up on the material and to ensure it sticks.
 - We thought, why not organize, summarize, and listen to the notes instead!
 - We created a workflow that takes each day's lessons, organizes the content, and presents it in one easy to use daily lesson recap.
-- Since you don't have a lot of time given the full on Bootcamp workload, we also ensured that each daily lesson is only 1 minute. You can listen to it on the way to class or in the few mins every morning it takes for everyone to arrive.
+- Since we don't have a lot of time given the Bootcamp workload, we also ensured that each recap is only 1 minute. You can listen to it on the way to class or in the morning before everyone arrives.
+- We have also been experimenting with additional features which Anand will go over later in the presentation.
 - We hope this makes your experience at IronHack more manageable!
-- Ugo will now show you how it works.
+- Let's see how it works! Hugo will now show us a demo.
 
 ---
 
